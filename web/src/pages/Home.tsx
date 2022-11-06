@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Alert from "../components/Alert";
 import { saveMessage } from "../database/sistema";
 import { CAMPO_VAZIO, FALHA, SUCESSO } from "../helpers/const";
@@ -20,22 +20,9 @@ const Home = () => {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setValues({ ...values, [prop]: event.target.value });
     };
-  useEffect(() => {
-    const keyDownHandler = (event: KeyboardEvent) => {
-      if (event.key === "Enter") {
-        var btn = document.querySelector("button");
-        btn?.click();
-      }
-    };
 
-    document.addEventListener("keydown", keyDownHandler);
-
-    return () => {
-      document.removeEventListener("keydown", keyDownHandler);
-    };
-  }, []);
-
-  const enviar = () => {
+  const enviar = (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (values.message.length > 0) {
       saveMessage(values)
         .then((res) => {
@@ -62,7 +49,7 @@ const Home = () => {
   return (
     <header>
       <h2>Digite abaixo uma mensagem:</h2>
-      <div>
+      <form onSubmit={enviar}>
         <input
           placeholder="Digite aqui"
           value={values.message}
@@ -71,8 +58,8 @@ const Home = () => {
           required
           type="message"
         />
-        <button onClick={() => enviar()}>Enviar</button>
-      </div>
+        <button type="submit">Enviar</button>
+      </form>
       <Alert message={alert.message} error={alert.error} show={alert.show} />
     </header>
   );
