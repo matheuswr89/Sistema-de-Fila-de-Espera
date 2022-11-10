@@ -58,7 +58,7 @@
       </ul>
     </li>
     <li>
-      <a href="#utilização">Utilização</a>
+      <a href="#configuração">Configuração</a>
       <ul>
         <li><a href="#pré-requisitos">Pré-requisitos</a></li>
         <li><a href="#instalação">Instalação</a></li>
@@ -80,6 +80,11 @@ Projeto desenvolvido como trabalho prático para a disciplina _PROGRAMAÇÃO PAR
 - Giovanne Discacciati
 - Matheus William
 
+O objetivo do projeto é desenvolver um sistema de atendimento com notícias e outras informações para os clientes de um estabelecimento acompanharem enquanto aguardam ser chamados. O sistema será executado em uma TV Box rodando Android ligada a uma televisão ou monitor. 
+
+Além do aplicativo Android, existe também um sistema web para gerenciamento do conteúdo exibido, bem como para emitir alertas sonoros e informações (por exemplo, avisar que o caixa 1 está livre, ou chamar a senha 432).
+
+
 <p align="right">(<a href="#readme-top">Voltar para o início</a>)</p>
 
 
@@ -95,7 +100,7 @@ Projeto desenvolvido como trabalho prático para a disciplina _PROGRAMAÇÃO PAR
 
 
 <!-- GETTING STARTED -->
-## Utilização
+## Configuração
 
 ### Pré-requisitos
 
