@@ -5,7 +5,8 @@ import {
   signOut,
   UserCredential,
 } from "firebase/auth";
-import { firebaseAuth } from "../database/firebaseConfig";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { firebaseAuth, firestore } from "../database/firebaseConfig";
 import { LoginInterface } from "../helpers/interfaces";
 
 export function auth(login: LoginInterface) {
@@ -13,19 +14,34 @@ export function auth(login: LoginInterface) {
     firebaseAuth,
     login.email,
     login.senha
-  ).then((userCredential: any) => {
-    const user = userCredential;
+  ).then((userCredential: UserCredential) => {
+    saveUser(userCredential, login.name + "");
   });
 }
 
-export function logout() {
+export function logoutFirebase() {
   return signOut(firebaseAuth);
 }
 
-export function login(login: LoginInterface) {
+export function loginFirebase(login: LoginInterface) {
   return signInWithEmailAndPassword(firebaseAuth, login.email, login.senha);
 }
 
-export function resetPassword(email: any) {
+export function resetPassword(email: string) {
   return sendPasswordResetEmail(firebaseAuth, email);
+}
+
+function saveUser(user: UserCredential, name: string) {
+  return addDoc(collection(firestore, `user`), {
+    id: user.user.uid,
+    type: "user",
+    name,
+  });
+}
+
+export async function getUserInfo(uid: string) {
+  const q = query(collection(firestore, "user"), where("id", "==", uid));
+
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.at(0)?.get("type");
 }

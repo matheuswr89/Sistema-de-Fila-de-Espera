@@ -1,80 +1,106 @@
-import { useEffect, useState } from "react";
-import Alert from "../components/Alert";
-import { saveMessage } from "../database/sistema";
-import { CAMPO_VAZIO, FALHA, SUCESSO } from "../helpers/const";
-import { AlertInterface, MessageInterface } from "../helpers/interfaces";
+import { useContext, useEffect, useState } from "react";
+
+import { FaBars } from "react-icons/fa";
+import Navbar from "../components/Navbar";
+import { AuthContext } from "../context/Auth";
+import { ButtonGroup, Tab } from "../helpers/const";
+import { ContextInterface, TabInterface } from "../helpers/interfaces";
+import Cadastro from "../screen/Cadastro";
+import ChamarSenha from "../screen/ChamarSenha";
+import Geral from "../screen/Geral";
+import Monetary from "../screen/Monetary";
+import News from "../screen/News";
+import Weather from "../screen/Weather";
+
+const tabsElements: TabInterface[] = [
+  {
+    component: <ChamarSenha />,
+    value: "tab1",
+    name: "Chamar o próximo da fila",
+  },
+  {
+    component: <Geral />,
+    value: "tab6",
+    name: "Configuração geral",
+  },
+  {
+    component: <News />,
+    value: "tab5",
+    name: "Configuração de notícias",
+  },
+  {
+    component: <Monetary />,
+    value: "tab3",
+    name: "Configuração de mercado",
+  },
+  {
+    component: <Weather />,
+    value: "tab4",
+    name: "Configuração climática",
+  },
+  {
+    component: <Cadastro />,
+    value: "tab2",
+    name: "Cadastro de atendentes",
+  },
+];
 
 const Home = () => {
-  const [values, setValues] = useState<MessageInterface>({
-    message: "",
-  });
+  const { user }: ContextInterface = useContext(AuthContext);
+  const [tab, setTab] = useState<number>(0);
+  const [showElement, setShowElement] = useState(false);
+  const [showButton, setShowButton] = useState(false);
+  const showOrHide = () => setShowElement(!showElement);
 
-  const [alert, setAlert] = useState<AlertInterface>({
-    message: "",
-    error: false,
-    show: false,
-  });
-
-  const handleChange =
-    (prop: keyof MessageInterface) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setValues({ ...values, [prop]: event.target.value });
-    };
-  useEffect(() => {
-    const keyDownHandler = (event: KeyboardEvent) => {
-      if (event.key === "Enter") {
-        var btn = document.querySelector("button");
-        btn?.click();
-      }
-    };
-
-    document.addEventListener("keydown", keyDownHandler);
-
-    return () => {
-      document.removeEventListener("keydown", keyDownHandler);
-    };
-  }, []);
-
-  const enviar = () => {
-    if (values.message.length > 0) {
-      saveMessage(values)
-        .then((res) => {
-          addAlert(SUCESSO, false, true);
-        })
-        .catch((error) => {
-          addAlert(FALHA + error, true, true);
-        });
-      setValues({ message: "" });
+  const verificaTela = () => {
+    if (window.innerWidth <= 640) {
+      setShowButton(true);
+      setShowElement(false);
     } else {
-      addAlert(CAMPO_VAZIO, true, true);
+      setShowButton(false);
+      setShowElement(true);
     }
   };
 
-  const addAlert = (message: string, error: boolean, show?: boolean) => {
-    setAlert({
-      message,
-      error,
-      show,
-    });
-    setTimeout(() => addAlert("", false, false), 5000);
+  window.onresize = function () {
+    verificaTela();
   };
 
+  useEffect(() => {
+    verificaTela();
+  }, []);
+
   return (
-    <header>
-      <h2>Digite abaixo uma mensagem:</h2>
-      <div>
-        <input
-          placeholder="Digite aqui"
-          value={values.message}
-          onChange={handleChange("message")}
-          id="message-input"
-          required
-          type="message"
-        />
-        <button onClick={() => enviar()}>Enviar</button>
-      </div>
-      <Alert message={alert.message} error={alert.error} show={alert.show} />
-    </header>
+    <>
+      <Navbar />
+      {user.type === "admin" && (
+        <aside>
+          {showButton && (
+            <button className="bar-mobile" onClick={() => showOrHide()}>
+              <FaBars />
+            </button>
+          )}
+          {showElement && (
+            <ButtonGroup className="tab-button-group">
+              {tabsElements.map((type: TabInterface, index) => (
+                <Tab
+                  key={type.value}
+                  active={tab !== -1 && tabsElements[tab].value === type.value}
+                  onClick={() => {
+                    setTab(index);
+                    verificaTela();
+                  }}
+                >
+                  {type.name}
+                </Tab>
+              ))}
+            </ButtonGroup>
+          )}
+        </aside>
+      )}
+      {showButton && <h2>{tabsElements[tab].name}</h2>}
+      {tabsElements[tab].component}
+    </>
   );
 };
 

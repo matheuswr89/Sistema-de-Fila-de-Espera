@@ -1,0 +1,28 @@
+nav .wrapper {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-around;
+}
+
+nav .wrapper a {
+  cursor: pointer;
+  text-decoration: none;
+  color: #000;
+}
+
+nav .wrapper a.logo {
+  font-style: oblique;
+  font-weight: bold;
+  font-size: 20px;
+  padding-top: 0.5rem;
+}
+nav .wrapper .button {
+  background-color: transparent;
+  border: 2px solid #fe5c5a;
+  padding: 10px;
+  border-radius: 1rem;
+}
+nav .wrapper .button:hover {
+  background-color: #fe5c5a;
+  color: #fff;
+}

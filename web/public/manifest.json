@@ -3,7 +3,7 @@
   "name": "Sistema de Fila de Espera",
   "icons": [
     {
-      "src": "tv.png",
+      "src": "queue.png",
       "type": "image/png",
       "sizes": "192x192"
     }

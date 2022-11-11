@@ -1,14 +1,53 @@
 export interface LoginInterface {
   email: string;
   senha: string;
+  name?: string;
 }
 
-export interface MessageInterface {
-  message: string;
-}
-
-export interface AlertInterface{
+export interface AlertInterface {
   message: string;
   error: boolean;
-  show?: boolean
+}
+
+export interface ContextInterface {
+  authenticated?: boolean;
+  user?: any;
+  loading?: boolean;
+  login?: (value: LoginInterface) => void;
+  logout?: () => void;
+  error?: boolean;
+}
+
+export interface SenhaInterface {
+  date: number;
+  senha: number;
+  sendoAtendido: boolean;
+}
+
+export interface TabInterface {
+  component: React.ReactElement;
+  value: string;
+  name: string;
+}
+
+export interface NoticiasInterface {
+  termo: string;
+  data: string;
+  pais: string;
+  categoria: string;
+}
+
+export interface CotacaoInterface {
+  value: string;
+  label?: string;
+}
+
+export interface PrevisaoInterface {
+  lat: number;
+  lon: number;
+}
+
+export interface ConfiguracaoInterface {
+  tempoTela: number;
+  tempoApi: number;
 }
