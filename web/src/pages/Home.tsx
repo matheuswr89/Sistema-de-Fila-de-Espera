@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { FaBars } from "react-icons/fa";
 import Navbar from "../components/Navbar";
+import { AuthContext } from "../context/Auth";
 import { ButtonGroup, Tab } from "../helpers/const";
-import { TabInterface } from "../helpers/interfaces";
+import { ContextInterface, TabInterface } from "../helpers/interfaces";
 import Cadastro from "../screen/Cadastro";
 import ChamarSenha from "../screen/ChamarSenha";
 import Geral from "../screen/Geral";
