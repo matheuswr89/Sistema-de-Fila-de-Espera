@@ -9,6 +9,7 @@ const Navbar = () => {
   const handleLogout = () => {
     if (logout) logout();
   };
+
   return (
     <nav>
       <div className="wrapper">
