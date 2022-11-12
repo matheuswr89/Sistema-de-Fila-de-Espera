@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-
 import { FaBars } from "react-icons/fa";
+
 import Navbar from "../components/Navbar";
 import { AuthContext } from "../context/Auth";
 import { ButtonGroup, Tab } from "../helpers/const";
@@ -53,7 +53,7 @@ const Home = () => {
   const showOrHide = () => setShowElement(!showElement);
 
   const verificaTela = () => {
-    if (window.innerWidth <= 640) {
+    if (window.innerWidth <= 660) {
       setShowButton(true);
       setShowElement(false);
     } else {

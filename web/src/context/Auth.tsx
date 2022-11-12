@@ -2,6 +2,7 @@ import { UserCredential } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
 import { getUserInfo, loginFirebase, logoutFirebase } from "../database/auth";
 import { ERRO_LOGIN, FAZENDO_LOGIN } from "../helpers/const";
 import { LoginInterface } from "../helpers/interfaces";
@@ -20,12 +21,11 @@ export const AuthProvider = ({ children }: any) => {
   }, []);
 
   const login = async (values: LoginInterface) => {
-    try {
       const data: UserCredential = await toast.promise(loginFirebase(values), {
         pending: FAZENDO_LOGIN,
         error: ERRO_LOGIN,
       });
-
+      
       if (data) {
         const loggedUser: any = {
           id: data.user.uid,
@@ -36,7 +36,6 @@ export const AuthProvider = ({ children }: any) => {
         setUser(loggedUser);
         navigate("/");
       }
-    } catch (FirebaseError) {}
   };
 
   const logout = () => {
@@ -48,7 +47,7 @@ export const AuthProvider = ({ children }: any) => {
 
   return (
     <AuthContext.Provider
-      value={{ authenticated: !!user, user, login, logout }}
+      value={{ authenticated: !!user, user, login, logout, loading }}
     >
       {children}
     </AuthContext.Provider>
