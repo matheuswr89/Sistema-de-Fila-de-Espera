@@ -1,9 +1,10 @@
-import { UserCredential } from "firebase/auth";
+import { onAuthStateChanged, UserCredential } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { getUserInfo, loginFirebase, logoutFirebase } from "../database/auth";
+import { firebaseAuth } from "../database/firebaseConfig";
 import { ERRO_LOGIN, FAZENDO_LOGIN } from "../helpers/const";
 import { LoginInterface } from "../helpers/interfaces";
 
@@ -18,6 +19,13 @@ export const AuthProvider = ({ children }: any) => {
     const recoveredUser = localStorage.getItem("user");
     if (recoveredUser) setUser(JSON.parse(recoveredUser));
     setLoading(false);
+    onAuthStateChanged(firebaseAuth, (user) => {
+      if (user) {
+        navigate("/");
+      } else {
+        navigate("/login");
+      }
+    });
   }, []);
 
   const login = async (values: LoginInterface) => {
