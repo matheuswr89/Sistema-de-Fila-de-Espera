@@ -5,7 +5,7 @@ import { loader } from "../..";
 import Loading from "../../components/Loading";
 import { getLast, save } from "../../database/sistema";
 import { CAMPO_VAZIO } from "../../helpers/const";
-import { openToast } from "../../helpers/util";
+import { alertBlock, openToast } from "../../helpers/util";
 
 import "./style.css";
 
@@ -96,7 +96,7 @@ const Weather = () => {
   return (
     (!loading && (
       <section>
-        <div className="field">
+        <div className="field" onClick={() => alertBlock(edit)}>
           <label>Pesquise por um endereço:</label>
           <input
             ref={inputRef}
@@ -104,8 +104,8 @@ const Weather = () => {
             required
             disabled={edit}
           />
+          <div ref={map} id="map"></div>
         </div>
-        <div ref={map} id="map"></div>
 
         {!edit && <button onClick={() => enviar()}>Salvar</button>}
         {edit && (

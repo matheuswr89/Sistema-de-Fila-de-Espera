@@ -5,6 +5,7 @@ import Loading from "./components/Loading";
 import { AuthContext, AuthProvider } from "./context/Auth";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import Senhas from "./pages/Senhas";
 
 const AppRoute = () => {
   const Private = ({ children }: any) => {
@@ -22,6 +23,7 @@ const AppRoute = () => {
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/senhas" element={<Senhas />} />
           <Route
             path="/"
             element={

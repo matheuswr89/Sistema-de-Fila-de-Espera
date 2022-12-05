@@ -4,7 +4,7 @@ import Loading from "../../components/Loading";
 import { getLast, save } from "../../database/sistema";
 import { TEMPO_INVALIDO } from "../../helpers/const";
 import { ConfiguracaoInterface } from "../../helpers/interfaces";
-import { openToast } from "../../helpers/util";
+import { alertBlock, openToast } from "../../helpers/util";
 
 const Geral = () => {
   const [values, setValues] = useState<ConfiguracaoInterface>({
@@ -43,12 +43,11 @@ const Geral = () => {
     get();
   }, []);
 
-  let i = 0;
   return (
     (!loading && (
       <section>
         <form onSubmit={enviar}>
-          <div className="field">
+          <div className="field" onClick={() => alertBlock(edit)}>
             <label htmlFor="noti">Tempo de tela das noticias</label>
             <input
               type="number"
@@ -60,7 +59,7 @@ const Geral = () => {
               required
             />
           </div>
-          <div className="field">
+          <div className="field" onClick={() => alertBlock(edit)}>
             <label htmlFor="api">
               Especifique de quanto em quanto tempo o conteudo será atualizado
             </label>

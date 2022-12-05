@@ -7,6 +7,7 @@ import Loading from "../../components/Loading";
 import { getLast, save } from "../../database/sistema";
 import { moedas, SELECT_VAZIO } from "../../helpers/const";
 import { CotacaoInterface } from "../../helpers/interfaces";
+import { alertBlock } from "../../helpers/util";
 
 import "./style.css";
 
@@ -45,7 +46,7 @@ const Monetary = () => {
   return (
     (!loading && (
       <section>
-        <div className="field">
+        <div className="field" onClick={() => alertBlock(edit)}>
           <label>Selecione as moedas a serem monitoradas: </label>
           <Select
             options={moedas}

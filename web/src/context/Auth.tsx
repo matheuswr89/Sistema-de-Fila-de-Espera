@@ -20,30 +20,28 @@ export const AuthProvider = ({ children }: any) => {
     if (recoveredUser) setUser(JSON.parse(recoveredUser));
     setLoading(false);
     onAuthStateChanged(firebaseAuth, (user) => {
-      if (user) {
-        navigate("/");
-      } else {
+      if (!user) {
         navigate("/login");
       }
     });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const login = async (values: LoginInterface) => {
-      const data: UserCredential = await toast.promise(loginFirebase(values), {
-        pending: FAZENDO_LOGIN,
-        error: ERRO_LOGIN,
-      });
-      
-      if (data) {
-        const loggedUser: any = {
-          id: data.user.uid,
-          type: await getUserInfo(data.user.uid),
-        };
+    const data: UserCredential = await toast.promise(loginFirebase(values), {
+      pending: FAZENDO_LOGIN,
+      error: ERRO_LOGIN,
+    });
 
-        localStorage.setItem("user", JSON.stringify(loggedUser));
-        setUser(loggedUser);
-        navigate("/");
-      }
+    if (data) {
+      const loggedUser: any = {
+        id: data.user.uid,
+        type: await getUserInfo(data.user.uid),
+      };
+
+      localStorage.setItem("user", JSON.stringify(loggedUser));
+      setUser(loggedUser);
+      navigate("/");
+    }
   };
 
   const logout = () => {

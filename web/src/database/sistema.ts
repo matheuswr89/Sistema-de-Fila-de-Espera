@@ -6,12 +6,12 @@ import {
   DocumentReference,
   getDocs,
   orderBy,
-  OrderByDirection,
   query,
   updateDoc,
   where,
 } from "firebase/firestore";
 import { firestore } from "../database/firebaseConfig";
+import { LastQueue } from "../helpers/interfaces";
 
 export async function save(value: any, doc: string) {
   return addDoc(collection(firestore, doc), {
@@ -20,15 +20,19 @@ export async function save(value: any, doc: string) {
   });
 }
 
-export async function getLastQueue(order: OrderByDirection, tipo: number) {
+export async function getLastQueue(options: LastQueue) {
   const q =
-    tipo === 0
+    options.tipo === 0
       ? query(
           collection(firestore, "senhas"),
           where("sendoAtendido", "==", false),
-          orderBy("timestamp", order)
+          where("type", "==", options.type),
+          orderBy("timestamp", options.order)
         )
-      : query(collection(firestore, "senhas"), orderBy("timestamp", order));
+      : query(
+          collection(firestore, "senhas"),
+          orderBy("timestamp", options.order)
+        );
   const querySnapshot = await getDocs(q);
   return querySnapshot.docs.at(0);
 }

@@ -1,3 +1,5 @@
+import { OrderByDirection } from "firebase/firestore";
+
 export interface LoginInterface {
   email: string;
   senha: string;
@@ -22,6 +24,13 @@ export interface SenhaInterface {
   date: number;
   senha: number;
   sendoAtendido: boolean;
+  type: string;
+}
+
+export interface LastQueue {
+  order: OrderByDirection;
+  tipo: number;
+  type: string;
 }
 
 export interface TabInterface {

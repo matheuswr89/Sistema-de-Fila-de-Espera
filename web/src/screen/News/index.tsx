@@ -5,7 +5,7 @@ import Loading from "../../components/Loading";
 import { getLast, save } from "../../database/sistema";
 import { CAMPO_VAZIO, categories, countrys } from "../../helpers/const";
 import { NoticiasInterface } from "../../helpers/interfaces";
-import { openToast } from "../../helpers/util";
+import { alertBlock, openToast } from "../../helpers/util";
 
 import "./style.css";
 
@@ -60,7 +60,7 @@ const News = () => {
     (!loading && (
       <section>
         <form onSubmit={enviar}>
-          <div className="field">
+          <div className="field" onClick={() => alertBlock(edit)}>
             <label htmlFor="q">Termo de pesquisa</label>
             <input
               type="text"
@@ -72,7 +72,7 @@ const News = () => {
               required
             />
           </div>
-          <div className="field">
+          <div className="field" onClick={() => alertBlock(edit)}>
             <label htmlFor="date">Data de inicio:</label>
             <input
               type="date"
@@ -84,7 +84,7 @@ const News = () => {
               defaultValue={values.data}
             />
           </div>
-          <div className="field">
+          <div className="field" onClick={() => alertBlock(edit)}>
             <label htmlFor="country">País</label>
             <select
               name="country"

@@ -1,41 +1,49 @@
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
 import { useState } from "react";
-import { getLastQueue, save, updateSenha } from "../../database/sistema";
-import { SenhaInterface } from "../../helpers/interfaces";
+import { getLastQueue, updateSenha } from "../../database/sistema";
+import { LastQueue } from "../../helpers/interfaces";
 
 const ChamarSenha = () => {
-  const [senha, setSenha] = useState<SenhaInterface>();
   const [atual, setAtual] = useState<QueryDocumentSnapshot<DocumentData>>();
-  const pegarSenha = async () => {
-    const lastQueue = await getLastQueue("desc", 1);
-    const lastSenha = lastQueue?.get("senha");
-    const actualSenha = lastSenha ? parseInt(lastSenha + 1) : 1;
-    const objectSenha: SenhaInterface = {
-      date: Math.floor(Date.now() / 1000),
-      sendoAtendido: false,
-      senha: actualSenha,
+  const [senhasChamadas, setSenhasChamadas] = useState<any[]>([]);
+  const proximoFila = async (type: string) => {
+    const options: LastQueue = {
+      order: "asc",
+      tipo: 0,
+      type,
     };
-    await save(objectSenha, "senhas");
-    setSenha(objectSenha);
-  };
-
-  const proximoFila = async () => {
-    const lastDoc = await getLastQueue("asc", 0);
+    const lastDoc = await getLastQueue(options);
     setAtual(lastDoc);
-    if (lastDoc) updateSenha(lastDoc);
+    if (lastDoc) {
+      updateSenha(lastDoc);
+      setSenhasChamadas((prevNames) => [...prevNames, lastDoc]);
+    }
   };
 
   return (
     <section>
       <div className="senhas">
-        <button onClick={pegarSenha}>Pegar senha</button>
-        <span>{senha && <h1>Sua senha: {senha.senha}</h1>}</span>
+        <button onClick={() => proximoFila("N")}>Chamar senha normal</button>
+        <button onClick={() => proximoFila("P")}>
+          Chamar senha preferencial
+        </button>
+        {atual && (
+          <h1>
+            Senha atual: {atual.get("type")}
+            {atual.get("senha")}
+          </h1>
+        )}
       </div>
-      <div className="senhas">
-        <button onClick={proximoFila}>Chamar o próximo da fila</button>
-        {atual && <h1>Senha atual: {atual.get("senha")}</h1>}
-      </div>
-      {!atual && <h1>Nenhuma senha chamada ou disponivel!</h1>}
+      {!atual && <h1>Nenhuma senha chamada!</h1>}
+
+      <ul>
+        {senhasChamadas.map((s: any) => (
+          <li>
+            {s.get("type")}
+            {s.get("senha")}
+          </li>
+        ))}
+      </ul>
     </section>
   );
 };

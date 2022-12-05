@@ -92,6 +92,7 @@ section {
 section .field {
   display: flex;
   flex-direction: column;
+  margin-top: 1rem;
 }
 
 .editar {
@@ -140,4 +141,10 @@ h2 {
     display: flex !important;
     flex-direction: column;
   }
+}
+
+.center {
+  height: 100vh;
+  display: grid;
+  place-items: center;
 }
