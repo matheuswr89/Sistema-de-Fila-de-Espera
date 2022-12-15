@@ -57,6 +57,5 @@ export interface PrevisaoInterface {
 }
 
 export interface ConfiguracaoInterface {
-  tempoTela: number;
   tempoApi: number;
 }

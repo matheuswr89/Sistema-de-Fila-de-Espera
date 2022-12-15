@@ -14,11 +14,6 @@ import Weather from "../screen/Weather";
 
 const tabsElements: TabInterface[] = [
   {
-    component: <ChamarSenha />,
-    value: "tab1",
-    name: "Chamar o próximo da fila",
-  },
-  {
     component: <Geral />,
     value: "tab6",
     name: "Configuração geral",
@@ -43,6 +38,11 @@ const tabsElements: TabInterface[] = [
     value: "tab2",
     name: "Cadastro de atendentes",
   },
+  {
+    component: <ChamarSenha />,
+    value: "tab1",
+    name: "Chamar o próximo da fila",
+  }
 ];
 
 const Home = () => {

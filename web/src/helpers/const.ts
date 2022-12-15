@@ -5,7 +5,7 @@ export const SUCESSO = "Dados gravados com sucesso!";
 export const FALHA = "Erro ao gravar os dados!";
 export const CAMPO_VAZIO = "Não pode ter campos vazios!";
 export const SELECT_VAZIO = "Selecione pelo menos uma opção!";
-export const TEMPO_INVALIDO = "O tempo tem que ser maior do que 10 segundos!";
+export const TEMPO_INVALIDO = "O tempo tem que ser maior do que 30 segundos!";
 export const BLOCK =
   "O formulário está bloqueado, clique no botão editar para desbloquea-lo!";
 export const ERRO_LOGIN =

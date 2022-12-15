@@ -8,7 +8,6 @@ import { alertBlock, openToast } from "../../helpers/util";
 
 const Geral = () => {
   const [values, setValues] = useState<ConfiguracaoInterface>({
-    tempoTela: 0,
     tempoApi: 0,
   });
   const [edit, setEdit] = useState(false);
@@ -17,11 +16,10 @@ const Geral = () => {
   const enviar = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     const geral: ConfiguracaoInterface = {
-      tempoTela: e.target.noti.value,
       tempoApi: e.target.api.value,
     };
-    if (geral.tempoTela && geral.tempoApi) {
-      if (geral.tempoTela >= 10 && geral.tempoApi > 10) {
+    if (geral.tempoApi) {
+      if (geral.tempoApi > 30) {
         openToast(save({ geral }, "geral"));
         setEdit(true);
       } else {
@@ -48,26 +46,14 @@ const Geral = () => {
       <section>
         <form onSubmit={enviar}>
           <div className="field" onClick={() => alertBlock(edit)}>
-            <label htmlFor="noti">Tempo de tela das noticias</label>
-            <input
-              type="number"
-              name="noti"
-              id="noti"
-              placeholder="Forneça um numero..."
-              disabled={edit}
-              defaultValue={values.tempoTela}
-              required
-            />
-          </div>
-          <div className="field" onClick={() => alertBlock(edit)}>
             <label htmlFor="api">
-              Especifique de quanto em quanto tempo o conteudo será atualizado
+              Intervalo de tempo de atualização do conteúdo (segundos)
             </label>
             <input
               type="number"
               name="api"
               id="api"
-              placeholder="Forneça um numero..."
+              placeholder="Forneça um número..."
               disabled={edit}
               required
               defaultValue={values.tempoApi}
