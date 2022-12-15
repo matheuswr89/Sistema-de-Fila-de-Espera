@@ -17,31 +17,37 @@ const tabsElements: TabInterface[] = [
     component: <Geral />,
     value: "tab6",
     name: "Configuração geral",
+    //icon: FiSettings
   },
   {
     component: <News />,
     value: "tab5",
     name: "Configuração de notícias",
+    //icon: ImNewspaper
   },
   {
     component: <Monetary />,
     value: "tab3",
     name: "Configuração de mercado",
+    //icon: BsCurrencyExchange
   },
   {
     component: <Weather />,
     value: "tab4",
     name: "Configuração climática",
+    //icon: TiWeatherPartlySunny
   },
   {
     component: <Cadastro />,
     value: "tab2",
     name: "Cadastro de atendentes",
+    //icon: FiUserPlus
   },
   {
     component: <ChamarSenha />,
     value: "tab1",
     name: "Chamar o próximo da fila",
+    //icon: GiPlayerNext
   }
 ];
 
