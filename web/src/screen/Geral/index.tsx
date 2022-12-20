@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Loading from "../../components/Loading";
-import { getLast, save } from "../../database/sistema";
+import { get, set } from "../../database/sistema";
 import { TEMPO_INVALIDO } from "../../helpers/const";
 import { ConfiguracaoInterface } from "../../helpers/interfaces";
-import { alertBlock, openToast } from "../../helpers/util";
+import { openToast } from "../../helpers/util";
 
 const Geral = () => {
   const [values, setValues] = useState<ConfiguracaoInterface>({
     tempoApi: 0,
   });
-  const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const enviar = (e: React.ChangeEvent<HTMLFormElement>) => {
@@ -20,8 +19,7 @@ const Geral = () => {
     };
     if (geral.tempoApi) {
       if (geral.tempoApi > 30) {
-        openToast(save({ geral }, "geral"));
-        setEdit(true);
+        openToast(set("config", geral));
       } else {
         toast.error(TEMPO_INVALIDO);
       }
@@ -29,23 +27,22 @@ const Geral = () => {
   };
 
   useEffect(() => {
-    const get = async () => {
-      const values = await getLast("geral");
-      const geral: ConfiguracaoInterface = values?.get("geral");
+    const getData = async () => {
+      const values = await get("config");
+      const geral = values.data() as ConfiguracaoInterface;
       if (geral) {
         setValues(geral);
-        setEdit(true);
       }
       setLoading(false);
     };
-    get();
+    getData();
   }, []);
 
   return (
     (!loading && (
       <section>
         <form onSubmit={enviar}>
-          <div className="field" onClick={() => alertBlock(edit)}>
+          <div className="field">
             <label htmlFor="api">
               Intervalo de tempo de atualização do conteúdo (segundos)
             </label>
@@ -54,17 +51,11 @@ const Geral = () => {
               name="api"
               id="api"
               placeholder="Forneça um número..."
-              disabled={edit}
               required
               defaultValue={values.tempoApi}
             />
           </div>
-          {!edit && <button type="submit">Salvar</button>}
-          {edit && (
-            <button className="editar" onClick={() => setEdit(false)}>
-              Editar
-            </button>
-          )}
+          <button type="submit">Salvar</button>
         </form>
       </section>
     )) || <Loading />

@@ -1,6 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa";
 
+import { BsCurrencyExchange } from "react-icons/bs";
+import { FiSettings, FiUserPlus } from "react-icons/fi";
+import { GiPlayerNext } from "react-icons/gi";
+import { ImNewspaper } from "react-icons/im";
+import { TiWeatherPartlySunny } from "react-icons/ti";
 import Navbar from "../components/Navbar";
 import { AuthContext } from "../context/Auth";
 import { ButtonGroup, Tab } from "../helpers/const";
@@ -17,38 +22,38 @@ const tabsElements: TabInterface[] = [
     component: <Geral />,
     value: "tab6",
     name: "Configuração geral",
-    //icon: FiSettings
+    icon: <FiSettings size={30} />,
   },
   {
     component: <News />,
     value: "tab5",
     name: "Configuração de notícias",
-    //icon: ImNewspaper
+    icon: <ImNewspaper size={30} />,
   },
   {
     component: <Monetary />,
     value: "tab3",
     name: "Configuração de mercado",
-    //icon: BsCurrencyExchange
+    icon: <BsCurrencyExchange size={30} />,
   },
   {
     component: <Weather />,
     value: "tab4",
     name: "Configuração climática",
-    //icon: TiWeatherPartlySunny
+    icon: <TiWeatherPartlySunny size={30} />,
   },
   {
     component: <Cadastro />,
     value: "tab2",
     name: "Cadastro de atendentes",
-    //icon: FiUserPlus
+    icon: <FiUserPlus size={30} />,
   },
   {
     component: <ChamarSenha />,
     value: "tab1",
     name: "Chamar o próximo da fila",
-    //icon: GiPlayerNext
-  }
+    icon: <GiPlayerNext size={30} />,
+  },
 ];
 
 const Home = () => {
@@ -97,7 +102,8 @@ const Home = () => {
                     verificaTela();
                   }}
                 >
-                  {type.name}
+                  {type.icon}
+                  <p>{type.name}</p>
                 </Tab>
               ))}
             </ButtonGroup>

@@ -38,7 +38,7 @@ const ChamarSenha = () => {
 
       <ul>
         {senhasChamadas.map((s: any) => (
-          <li>
+          <li key={s.get("senha")}>
             {s.get("type")}
             {s.get("senha")}
           </li>

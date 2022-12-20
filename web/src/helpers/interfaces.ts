@@ -37,11 +37,11 @@ export interface TabInterface {
   component: React.ReactElement;
   value: string;
   name: string;
+  icon: React.ReactElement;
 }
 
 export interface NoticiasInterface {
   termo: string;
-  data: string;
   pais: string;
   categoria: string;
 }

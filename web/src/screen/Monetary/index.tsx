@@ -4,10 +4,10 @@ import makeAnimated from "react-select/animated";
 import { toast } from "react-toastify";
 import Loading from "../../components/Loading";
 
-import { getLast, save } from "../../database/sistema";
+import { get, set } from "../../database/sistema";
 import { moedas, SELECT_VAZIO } from "../../helpers/const";
 import { CotacaoInterface } from "../../helpers/interfaces";
-import { alertBlock } from "../../helpers/util";
+import { openToast } from "../../helpers/util";
 
 import "./style.css";
 
@@ -15,38 +15,52 @@ const animatedComponents = makeAnimated();
 
 const Monetary = () => {
   const [selected, setSelected] = useState<MultiValue<CotacaoInterface>>([]);
-  const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(true);
   const handleChange = (options: any) => {
     setSelected(options);
   };
 
+  const atualizaURL = async (array: any) => {
+    const response = await get("urls");
+    const data: any = response.data();
+    let moedas = [];
+    for (let i of array) {
+      moedas.push(i["value"]);
+    }
+    data[
+      "monetary"
+    ] = `https://economia.awesomeapi.com.br/json/last/${moedas.join(",")}`;
+    set("urls", data);
+  };
+
   const enviar = () => {
     if (selected.length > 0) {
-      save({ selected }, "monetary");
-      setEdit(true);
+      openToast(set("monetary", selected));
+      atualizaURL(selected);
     } else {
       toast.error(SELECT_VAZIO);
     }
   };
 
   useEffect(() => {
-    const get = async () => {
-      const values = await getLast("monetary");
-      const monetary: CotacaoInterface[] = values?.get("selected");
+    const getData = async () => {
+      const values = await get("monetary");
+      const monetary: any = values.data();
+
       if (monetary) {
-        setSelected(monetary);
-        setEdit(true);
+        let array = [];
+        for (let k in monetary) array.push(monetary[k]);
+        setSelected(array);
       }
       setLoading(false);
     };
-    get();
+    getData();
   }, []);
 
   return (
     (!loading && (
       <section>
-        <div className="field" onClick={() => alertBlock(edit)}>
+        <div className="field">
           <label>Selecione as moedas a serem monitoradas: </label>
           <Select
             options={moedas}
@@ -60,19 +74,12 @@ const Monetary = () => {
             placeholder="Selecione..."
             name="monetary"
             id="monetary"
-            isDisabled={edit}
           />
         </div>
-        {!edit && (
-          <button onClick={() => enviar()} type="submit">
-            Salvar
-          </button>
-        )}
-        {edit && (
-          <button className="editar" onClick={() => setEdit(false)}>
-            Editar
-          </button>
-        )}
+
+        <button onClick={() => enviar()} type="submit">
+          Salvar
+        </button>
       </section>
     )) || <Loading />
   );

@@ -4,6 +4,7 @@ export const LOADING = "Gravando...";
 export const SUCESSO = "Dados gravados com sucesso!";
 export const FALHA = "Erro ao gravar os dados!";
 export const CAMPO_VAZIO = "Não pode ter campos vazios!";
+export const PAIS_NAO_SELECIONADO = "Selecione um país para continuar!";
 export const SELECT_VAZIO = "Selecione pelo menos uma opção!";
 export const TEMPO_INVALIDO = "O tempo tem que ser maior do que 30 segundos!";
 export const BLOCK =

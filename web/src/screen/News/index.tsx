@@ -2,57 +2,69 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Loading from "../../components/Loading";
 
-import { getLast, save } from "../../database/sistema";
-import { CAMPO_VAZIO, categories, countrys } from "../../helpers/const";
+import { get, set } from "../../database/sistema";
+import {
+  categories,
+  countrys,
+  PAIS_NAO_SELECIONADO,
+} from "../../helpers/const";
 import { NoticiasInterface } from "../../helpers/interfaces";
-import { alertBlock, openToast } from "../../helpers/util";
+import { openToast } from "../../helpers/util";
 
 import "./style.css";
 
-const News = () => {
+const News = (url: any) => {
   const [values, setValues] = useState<NoticiasInterface>({
     termo: "",
-    data: "",
     pais: "-1",
     categoria: "-1",
   });
-  const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const atualizaURL = async (newsData: NoticiasInterface) => {
+    const response = await get("urls");
+    const data: any = response.data();
+    let url = "";
+    if (newsData.categoria !== "-1") {
+      url += `&category=${newsData.categoria}`;
+    }
+    if (newsData.termo) {
+      url += `&q=${newsData.termo}`;
+    }
+    if (newsData.pais) {
+      url += `&country=${newsData.pais}`;
+    }
+    data[
+      "news"
+    ] = `https://newsapi.org/v2/top-headlines?apiKey=${process.env.REACT_APP_NEWS_API}${url}`;
+    set("urls", data);
+  };
 
   const enviar = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     const news: NoticiasInterface = {
       termo: e.target.q.value,
-      data: e.target.date.value,
       pais: e.target.country.value,
       categoria: e.target.categoria.value,
     };
-    if (news.termo && news.pais && news.data && news.categoria) {
-      if (
-        news.termo.trim().length > 0 &&
-        news.pais !== "-1" &&
-        news.data.trim().length > 0 &&
-        news.categoria !== "-1"
-      ) {
-        openToast(save({ news }, "news"));
-        setEdit(true);
-      } else {
-        toast.error(CAMPO_VAZIO);
-      }
+    if (news.pais !== "-1") {
+      openToast(set("news", news));
+      atualizaURL(news);
+    } else {
+      toast.error(PAIS_NAO_SELECIONADO);
     }
   };
 
   useEffect(() => {
-    const get = async () => {
-      const values = await getLast("news");
-      const news: NoticiasInterface = values?.get("news");
+    const getData = async () => {
+      const values = await get("news");
+      const news = values.data() as NoticiasInterface;
       if (news) {
         setValues(news);
-        setEdit(true);
       }
       setLoading(false);
     };
-    get();
+    getData();
   }, []);
 
   let i = 0;
@@ -60,40 +72,20 @@ const News = () => {
     (!loading && (
       <section>
         <form onSubmit={enviar}>
-          <div className="field" onClick={() => alertBlock(edit)}>
+          <div className="field">
             <label htmlFor="q">Termo de pesquisa</label>
             <input
               type="text"
               name="q"
               id="q"
               placeholder="Digite aqui um termo..."
-              disabled={edit}
               defaultValue={values.termo}
-              required
             />
           </div>
-          <div className="field" onClick={() => alertBlock(edit)}>
-            <label htmlFor="date">Data de inicio:</label>
-            <input
-              type="date"
-              name="date"
-              id="date"
-              placeholder="Selecione uma data..."
-              disabled={edit}
-              required
-              defaultValue={values.data}
-            />
-          </div>
-          <div className="field" onClick={() => alertBlock(edit)}>
+          <div className="field">
             <label htmlFor="country">País</label>
-            <select
-              name="country"
-              id="country"
-              defaultValue={values.pais}
-              disabled={edit}
-              required
-            >
-              <option key={i++} value={-1} disabled>
+            <select name="country" id="country" defaultValue={values.pais}>
+              <option key={i++} value={-1}>
                 Escolha uma opção
               </option>
               {countrys.map((id) => (
@@ -109,10 +101,8 @@ const News = () => {
               name="categoria"
               id="categoria"
               defaultValue={values.categoria}
-              disabled={edit}
-              required
             >
-              <option key={i++} value={-1} disabled>
+              <option key={i++} value={-1}>
                 Escolha uma opção
               </option>
               {categories.map((id) => (
@@ -122,12 +112,7 @@ const News = () => {
               ))}
             </select>
           </div>
-          {!edit && <button type="submit">Salvar</button>}
-          {edit && (
-            <button className="editar" onClick={() => setEdit(false)}>
-              Editar
-            </button>
-          )}
+          <button type="submit">Salvar</button>
         </form>
       </section>
     )) || <Loading />

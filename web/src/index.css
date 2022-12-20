@@ -95,11 +95,6 @@ section .field {
   margin-top: 1rem;
 }
 
-.editar {
-  background-color: #c7d63f;
-  color: #000;
-}
-
 .Toastify__toast-body {
   width: 1000px;
 }

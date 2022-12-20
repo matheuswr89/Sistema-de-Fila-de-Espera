@@ -1,17 +1,24 @@
-nav .wrapper {
-  margin-top: 1rem;
+nav {
+  background: #585858;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+}
+nav .wrapper {
+  padding: 10px 10px;
+  display: flex;
+  max-width: 1200px;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 nav .wrapper a {
   cursor: pointer;
   text-decoration: none;
-  color: #000;
+  color: #fff;
 }
 
 nav .wrapper a.logo {
-  font-style: oblique;
   font-weight: bold;
   font-size: 20px;
   padding-top: 0.5rem;
@@ -21,6 +28,7 @@ nav .wrapper .button {
   border: 2px solid #fe5c5a;
   padding: 10px;
   border-radius: 1rem;
+  font-weight: bold;
 }
 nav .wrapper .button:hover {
   background-color: #fe5c5a;
