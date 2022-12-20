@@ -58,7 +58,7 @@ const tabsElements: TabInterface[] = [
 
 const Home = () => {
   const { user }: ContextInterface = useContext(AuthContext);
-  const [tab, setTab] = useState<number>(0);
+  const [tab, setTab] = useState<number>(user.type === "admin" ? 0 : 5);
   const [showElement, setShowElement] = useState(false);
   const [showButton, setShowButton] = useState(false);
   const showOrHide = () => setShowElement(!showElement);
