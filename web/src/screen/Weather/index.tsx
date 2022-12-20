@@ -27,7 +27,6 @@ const Weather = () => {
     const loadGoogle = async () => {
       const google = await loader.load();
       const values = await get("weather");
-      console.log(values);
       setLoading(false);
       await sleep(5);
       autoCompleteRef.current = new google.maps.places.Autocomplete(
