@@ -12,6 +12,7 @@ export const BLOCK =
 export const ERRO_LOGIN =
   "Dados de login inválidos, corrija os dados e tente novamente!";
 export const FAZENDO_LOGIN = "Entrando...";
+export const GUICHE_INVALIDO = "Forneça um guichê válido!";
 
 export const Tab = styled.button.attrs((props: any) => ({
   active: props.active,

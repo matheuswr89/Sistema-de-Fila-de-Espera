@@ -45,10 +45,11 @@ export async function deleteSenha(ref: DocumentReference<DocumentData>) {
   await deleteDoc(ref);
 }
 
-export async function updateSenha(doc: DocumentData) {
+export async function updateSenha(doc: DocumentData, guiche: number) {
   await updateDoc(doc.ref, {
     sendoAtendido: true,
     timestampAtendimento: serverTimestamp(),
+    guiche,
   });
 }
 
