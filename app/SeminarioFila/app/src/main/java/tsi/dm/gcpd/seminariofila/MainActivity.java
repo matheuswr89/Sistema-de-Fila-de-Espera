@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         webView.loadUrl("file:///android_asset/index.html");
 
         listenerSenhas = db.collection("senhas")
-                .orderBy("timestampAtendimento", Direction.DESCENDING).limit(5)
+                .orderBy("timestampAtendimento", Direction.DESCENDING).limit(4)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value,
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                         for (QueryDocumentSnapshot doc : value) {
                             if (doc.get("type") != null) {
                                 if(doc.get("senha") != null && doc.get("guiche") != null){
-                                    String senha = doc.getString("type") + String.valueOf(doc.get("senha"))+ " - Guichê " + doc.get("guiche");
+                                    String senha = doc.getString("type") + String.valueOf(doc.get("senha"))+ " - " + doc.get("guiche");
                                     listaSenhas.add(senha);
 
                                 }

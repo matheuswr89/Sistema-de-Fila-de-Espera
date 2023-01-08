@@ -26,7 +26,16 @@ function setListaURL(list){
 
 function setListaSenhas(list){
      listaSenhas = list;
-     enviaSenhaAilton(listaSenhas);
+     let senhasJSON = [];
+     for (const item of list){
+              const splitSenha = item.split(' - ');
+              let senhaItem = {
+                 senha: splitSenha[0],
+                 guiche: parseInt(splitSenha[1])
+              }
+              senhasJSON.push(senhaItem);
+     }
+     enviaSenhaAilton(senhasJSON);
 }
 
 function setNewsJSON(data){
@@ -75,7 +84,7 @@ function enviaFinancaAilton(dado){
 
 function enviaSenhaAilton(dado){
     console.log("enviou senhas");
-    console.log(dado);
+    console.log(JSON.stringify(dado));
 }
 
 function enviaNewsAilton(dado){
