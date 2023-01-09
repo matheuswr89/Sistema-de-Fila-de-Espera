@@ -8,12 +8,12 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.EventListener;
@@ -23,11 +23,24 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query.Direction;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.JsonParser;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private ListenerRegistration listenerURL;
     MediaPlayer mp = null;
     private List<String> listaSenhas;
-    private Long tempoApi;
+    private Long tempoAlteracao;
     private List<String> listaURL;
     public WebView webView;
 
@@ -49,7 +62,13 @@ public class MainActivity extends AppCompatActivity {
         // Configura a WebView
         webView = (WebView) findViewById(R.id.webView);
         webView.setVisibility(View.INVISIBLE);
-        webView.setWebChromeClient(new WebChromeClient());
+        webView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+                android.util.Log.d("WebView", consoleMessage.message());
+                return true;
+            }
+        });
         // Habilita o JS
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -70,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         webView.loadUrl("file:///android_asset/index.html");
 
         listenerSenhas = db.collection("senhas")
-                .orderBy("timestampAtendimento", Direction.DESCENDING).limit(5)
+                .orderBy("timestampAtendimento", Direction.DESCENDING).limit(4)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value,
@@ -82,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
                         listaSenhas = new ArrayList<>();
                         for (QueryDocumentSnapshot doc : value) {
                             if (doc.get("type") != null) {
-                                if(doc.get("senha") != null){
-                                    String senha = doc.getString("type")+String.valueOf(doc.get("senha"));
+                                if(doc.get("senha") != null && doc.get("guiche") != null){
+                                    String senha = doc.getString("type") + String.valueOf(doc.get("senha"))+ " - " + doc.get("guiche");
                                     listaSenhas.add(senha);
 
                                 }
@@ -113,11 +132,11 @@ public class MainActivity extends AppCompatActivity {
 
                         for (QueryDocumentSnapshot doc : value) {
                             if (doc.get("tempoApi") != null) {
-                                tempoApi = Long.valueOf(doc.getString("tempoApi"));
+                                tempoAlteracao = Long.valueOf(doc.getString("tempoApi"));
                             }
                         }
-                        runJavaScript("setTime("+tempoApi+");");
-                        Log.d(TAG, "Current time: " + tempoApi);
+                        runJavaScript("setTime("+ tempoAlteracao +");");
+                        Log.d(TAG, "Current time: " + tempoAlteracao);
                     }
                 });
 
@@ -155,26 +174,48 @@ public class MainActivity extends AppCompatActivity {
         public WebAppInterface(MainActivity activity) {
             this.mainActivity = activity;
         }
-        @JavascriptInterface
-        public void androidToast(String msg) {
-            Toast.makeText(mainActivity, msg, Toast.LENGTH_SHORT).show();
-            // Chama uma função do JavaScript
-            runJavaScript("oculta_botao();");
-        }
+//        @JavascriptInterface
+//        public void androidToast(String msg) {
+//            Toast.makeText(mainActivity, msg, Toast.LENGTH_SHORT).show();
+//            // Chama uma função do JavaScript
+//            runJavaScript("oculta_botao();");
+//        }
 
         @JavascriptInterface
-        public void androidSetTime(Long time) {
-            runJavaScript("setTime("+time+");");
-        }
+        public void getNews(String urlString) throws IOException, JSONException {
+            Log.d("WebView", "entrou no método:" + urlString);
 
-        @JavascriptInterface
-        public void androidSetURL(List listURL) {
-            runJavaScript("setListaURL("+listURL+");");
-        }
+            OkHttpClient client = new OkHttpClient();
 
-        @JavascriptInterface
-        public void androidSetSenha(List listSenha) {
-            runJavaScript("setListaSenhas("+listSenha+");");
+            Request request = new Request.Builder()
+                    .url("https://newsapi.org/v2/top-headlines?apiKey=3a0ed5b2de3d4e2b928e7dde3ec5d293&country=br")
+                    .get()
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+                //Log.d("WebView", response.body().string());
+                JSONObject resp_JSON = new JSONObject(response.body().string());
+                runJavaScript("setNewsJSON(" + resp_JSON + ")");
+            } catch (IOException e) {
+                Log.e("NewsTask", "Error fetching news", e);
+            }
+
+
+//            // Formata os dados recebidos em uma string
+//            while((line = input.readLine()) != null)
+//                source.append(line);
+//            input.close();
+//
+//            // Transforma a string em um objeto JSON
+//            JSONObject respJSON = new JSONObject(source.toString());
+//
+//            //Using the JSON simple library parse the string into a json object
+//            JSONObject resp_JSON = new JSONObject(source.toString());
+
+            //
+
+
         }
     }
 
@@ -201,8 +242,8 @@ public class MainActivity extends AppCompatActivity {
         return listaSenhas;
     }
 
-    public Long getTempoApi() {
-        return tempoApi;
+    public Long getTempoAlteracao() {
+        return tempoAlteracao;
     }
 
     public List<String> getListaURL() {
