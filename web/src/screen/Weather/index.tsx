@@ -89,7 +89,7 @@ const Weather = () => {
     const location = JSON.parse(place.location);
     data[
       "weather"
-    ] = `https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lng}&appid=${process.env.REACT_APP_CLIMA_API_KEY}`;
+    ] = `https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lng}&appid=${process.env.REACT_APP_CLIMA_API_KEY}&units=metric`;
     set("urls", data);
   };
 
