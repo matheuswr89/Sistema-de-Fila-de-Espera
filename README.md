@@ -122,6 +122,8 @@ Além do aplicativo Android, existe também um sistema web para gerenciamento do
 <!-- USAGE -->
 ## Uso
 
+### Aplicação Web:
+
 Para iniciar a apllicação [web](https://github.com/matheuswr89/Sistema-de-Fila-de-Espera/tree/master/web):
 ```sh
    npm start
@@ -131,7 +133,11 @@ ou
    yarn start
 ```
 
-Para iniciar a aplicação Android, baixe o conteúdo de [app](https://github.com/matheuswr89/Sistema-de-Fila-de-Espera/tree/master/app/SeminarioFila), importe o projeto no Android Studio e o instale em seu dispositivo ou emulador.
+### Aplicação Android:
+
+Para iniciar a aplicação Android, basta baixar o arquivo [.apk](https://github.com/matheuswr89/Sistema-de-Fila-de-Espera/tree/master/app/Sistema%20de%20Fila%20de%20Espera.apk) e instalá-lo em seu dispositivo.
+
+Também é possivel baixar o conteúdo de [app](https://github.com/matheuswr89/Sistema-de-Fila-de-Espera/tree/master/app/SeminarioFila), importar o projeto no Android Studio e o instalar em seu dispositivo ou emulador.
 
 <p align="right">(<a href="#readme-top">Voltar para o início</a>)</p>
 
