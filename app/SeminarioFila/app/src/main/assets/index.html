@@ -1,25 +1,102 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <!--Import Google Icon Font-->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
 
-    <!--Let browser know website is optimized for mobile-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="utf-8">
     <title>Sistema Fila de Espera</title>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/flickity.min.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-    <div class="container">
+    <main class="my-container d-flex flex-wrap">
+        <section id="main-content-container" class="d-flex align-items-stretch border-end border-bottom border-dark">
+            <!-- <img class="img-news img-fluid"
+                src="https://images.jota.info/wp-content/uploads/2022/11/emilio-garcia-awdcgddedh0-unsplash-1024x598.jpg"
+                alt=""> -->
+            <img id="img-news" class="img-fluid" src="img/news.jpg">
 
-    </div>
+            <div id="news-text" class="d-flex align-items-center py-3 fs-1 text-light w-100 text-center">
+                <marquee direction="left" scrollamount="5">
+                    Bem Vindo!
+                </marquee>
+            </div>
+        </section>
 
-    <script type="text/javascript" src="js/script.js"></script>
+        <section id="queue-calls" class="d-flex flex-column text-uppercase gap-2 py-3 px-4 border-bottom border-dark">
+
+            <div id="current-queue-call" class="d-flex align-items-center lh-1 mb-1">
+                <span id="current-queue-call-code">
+                </span>
+                <span id="current-queue-call-guiche"
+                    class="d-flex flex-fill align-self-stretch flex-column justify-content-between text-end fs-2">
+                    <span>
+                    </span>
+                    <span class="ms-2 fw-bold">
+                    </span>
+                </span>
+            </div>
+
+
+            <div class="d-flex flex-column flex-fill fs-5 fw-bold">
+                <div class="text-center fs-4 border-top border-bottom border-dark py-3 mb-3">Últimas chamadas:</div>
+
+                <div id="previous-queue-calls" class="d-flex flex-column gap-1 flex-fill justify-content-around">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+        </section>
+
+        <section id="monetary-container"
+            class="d-flex justify-content-center align-items-center text-center px-4 border-end border-dark w-100">
+            <div id="monetary-carousel" class="carousel w-100" data-flickity='{ 
+                    "draggable": true, 
+                    "friction": 1,
+                    "autoPlay": 5000,
+                    "pauseAutoPlayOnHover": false,
+                    "freeScroll": true
+                }'>
+                <!-- "wrapAround": true -->
+            </div>
+        </section>
+
+        <section id="weather-container" class="d-flex align-items-center weather-text text-center">
+            <div class="col-4 d-flex flex-column align-items-center px-3 pb-3">
+                <img class="img-fluid col-8" id="weather-icon" src="img/loader.gif">
+                <span id="city"></span>
+                <span id="temperature" class="fs-4 fw-bold mt-1"></span>
+            </div>
+            <div class="col-8 h-100 d-flex flex-fill flex-column justify-content-evenly border-start border-dark">
+                <div id="date-container" class="col d-flex flex-column justify-content-center align-items-center px-3">
+                    <i class="bi bi-calendar-event fs-3"></i>
+                    <span id="day-of-the-week" class=""></span>
+                    <span id="date" class=""></span>
+                </div>
+                <div class="border-top border-dark col-12"></div>
+                <div id="time-container" class="col d-flex align-items-center justify-content-center px-3 fs-2">
+                    <i class="bi bi-clock me-3"></i>
+                    <span id="time"></span>
+                </div>
+            </div>
+        </section>
+    </main>
+
     <!--JavaScript at end of body for optimized loading-->
-    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="js/jquery-3.6.3.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="js/script_ui.js"></script>
+<!--    <script type="text/javascript" src="js/test-script.js"></script>-->
+    <script type="text/javascript" src="js/script.js"></script>
+    <script type="text/javascript" src="js/flickity.pkgd.min.js"></script>
 </body>
+
 </html>

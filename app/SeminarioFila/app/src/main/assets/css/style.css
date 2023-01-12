@@ -1,0 +1,94 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    /* overflow: hidden; */
+}
+
+.my-container {
+    width: 100vw;
+    height: 100vh;
+}
+
+#main-content-container {
+    position: relative;
+}
+
+#main-content-container, #monetary-container {
+    width: 60vw !important;
+}
+
+#queue-calls, #weather-container{
+    width: 40vw !important;
+}
+
+#main-content-container, #queue-calls {
+    height: 65vh !important;
+}
+
+#monetary-container, #weather-container{
+    height: 35vh !important;
+}
+
+#date-container, #time-container {
+    height: calc(35vh / 2) !important;
+}
+
+#img-news {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#news-text {
+    position: absolute;
+    bottom: 10%;
+    left: 0;
+
+    background-color: rgba(0, 0, 0, 0.9);
+
+    font-size: 3vw !important;
+    text-shadow: 0 0 5px black;
+}
+
+#current-queue-call-code {
+    font-size: 8vw !important;
+}
+
+.bg-black {
+    background-color: black;
+}
+
+.text-black {
+    color: black;
+}
+
+.border-black {
+    border-color: black !important;
+}
+
+.box-shadow-black {
+    box-shadow:
+        inset 0 0 2px black;
+}
+
+.flickity-prev-next-button {
+    display: none;
+}
+
+/* position dots up a bit */
+.flickity-page-dots {
+    bottom: -22px;
+}
+
+/* dots are lines */
+.flickity-page-dots .dot {
+    height: 4px;
+    width: 40px;
+    margin: 0;
+    border-radius: 0;
+    background-color: #aaa;
+}

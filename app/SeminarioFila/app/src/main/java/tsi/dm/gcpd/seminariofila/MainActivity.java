@@ -14,6 +14,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.EventListener;
@@ -78,93 +79,94 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                //ImageView imageView = (ImageView)
-                //        findViewById(R.id.imageView);
-                //imageView.setVisibility(View.INVISIBLE);
+                ImageView imageView = (ImageView)
+                        findViewById(R.id.imageView);
+                imageView.setVisibility(View.GONE);
                 webView.setVisibility(View.VISIBLE);
+
+                listenerSenhas = db.collection("senhas")
+                    .orderBy("timestampAtendimento", Direction.DESCENDING).limit(4)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value,
+                                            @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                Log.d(TAG, "Listen failed.", e);
+                                return;
+                            }
+
+                            listaSenhas = new ArrayList<>();
+                            for (QueryDocumentSnapshot doc : value) {
+                                if (doc.get("type") != null) {
+                                    if(doc.get("senha") != null && doc.get("guiche") != null){
+                                        String senha = doc.getString("type") + String.valueOf(doc.get("senha"))+ " - " + doc.get("guiche");
+                                        listaSenhas.add(senha);
+
+                                    }
+                                }
+                            }
+                            if(!listaSenhas.isEmpty()){
+                                //TextView textView = (TextView) findViewById(R.id.texto);
+                                //textView.setText(listaSenhas.get(0));
+                                releasePlayer();
+                                mp = MediaPlayer.create(getApplicationContext(), Settings.System.DEFAULT_NOTIFICATION_URI);
+                                mp.start();
+                            }
+                            runJavaScript("setListaSenhas("+new JSONArray(listaSenhas)+");");
+                            Log.d(TAG, "Current messages: " + listaSenhas);
+                        }
+                    });
+
+                listenerTempo = db.collection("config")
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value,
+                                            @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                Log.d(TAG, "Listen failed.", e);
+                                return;
+                            }
+
+                            for (QueryDocumentSnapshot doc : value) {
+                                if (doc.get("tempoApi") != null) {
+                                    tempoAlteracao = Long.valueOf(doc.getString("tempoApi"));
+                                }
+                            }
+                            runJavaScript("setTime("+ tempoAlteracao +");");
+                            Log.d(TAG, "Current time: " + tempoAlteracao);
+                        }
+                    });
+
+                listenerURL = db.collection("urls")
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value,
+                                            @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                Log.d(TAG, "Listen failed.", e);
+                                return;
+                            }
+                            listaURL = new ArrayList<>();
+                            for (QueryDocumentSnapshot doc : value) {
+                                if (doc.get("monetary") != null) {
+                                    listaURL.add(doc.getString("monetary"));
+                                }
+                                if (doc.get("news") != null) {
+                                    listaURL.add(doc.getString("news"));
+                                }
+                                if (doc.get("weather") != null) {
+                                    listaURL.add(doc.getString("weather"));
+                                }
+                            }
+                            runJavaScript("setListaURL("+new JSONArray(listaURL)+");");
+                            Log.d(TAG, "Current urls: " + listaURL);
+                        }
+                    });
             }
         });
         // Associa a interface (a ser definida abaixo) e carrega o HTML
         webView.addJavascriptInterface(new WebAppInterface(this), "Android");
         webView.loadUrl("file:///android_asset/index.html");
-
-        listenerSenhas = db.collection("senhas")
-                .orderBy("timestampAtendimento", Direction.DESCENDING).limit(4)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.d(TAG, "Listen failed.", e);
-                            return;
-                        }
-                        listaSenhas = new ArrayList<>();
-                        for (QueryDocumentSnapshot doc : value) {
-                            if (doc.get("type") != null) {
-                                if(doc.get("senha") != null && doc.get("guiche") != null){
-                                    String senha = doc.getString("type") + String.valueOf(doc.get("senha"))+ " - " + doc.get("guiche");
-                                    listaSenhas.add(senha);
-
-                                }
-                            }
-                        }
-                        if(!listaSenhas.isEmpty()){
-                            //TextView textView = (TextView) findViewById(R.id.texto);
-                            //textView.setText(listaSenhas.get(0));
-                            releasePlayer();
-                            mp = MediaPlayer.create(getApplicationContext(), Settings.System.DEFAULT_NOTIFICATION_URI);
-                            mp.start();
-                        }
-                        runJavaScript("setListaSenhas("+new JSONArray(listaSenhas)+");");
-                        Log.d(TAG, "Current messages: " + listaSenhas);
-                    }
-                });
-
-        listenerTempo = db.collection("config")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.d(TAG, "Listen failed.", e);
-                            return;
-                        }
-
-                        for (QueryDocumentSnapshot doc : value) {
-                            if (doc.get("tempoApi") != null) {
-                                tempoAlteracao = Long.valueOf(doc.getString("tempoApi"));
-                            }
-                        }
-                        runJavaScript("setTime("+ tempoAlteracao +");");
-                        Log.d(TAG, "Current time: " + tempoAlteracao);
-                    }
-                });
-
-        listenerURL = db.collection("urls")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.d(TAG, "Listen failed.", e);
-                            return;
-                        }
-                        listaURL = new ArrayList<>();
-                        for (QueryDocumentSnapshot doc : value) {
-                            if (doc.get("monetary") != null) {
-                                listaURL.add(doc.getString("monetary"));
-                            }
-                            if (doc.get("news") != null) {
-                                listaURL.add(doc.getString("news"));
-                            }
-                            if (doc.get("weather") != null) {
-                                listaURL.add(doc.getString("weather"));
-                            }
-                        }
-                        runJavaScript("setListaURL("+new JSONArray(listaURL)+");");
-                        Log.d(TAG, "Current urls: " + listaURL);
-                    }
-                });
 
     }
 
@@ -182,13 +184,13 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
         @JavascriptInterface
-        public void getNews(String urlString) throws IOException, JSONException {
+        public void getRequest(String urlString, String callback) throws IOException, JSONException {
             Log.d("WebView", "entrou no método:" + urlString);
 
             OkHttpClient client = new OkHttpClient();
 
             Request request = new Request.Builder()
-                    .url("https://newsapi.org/v2/top-headlines?apiKey=3a0ed5b2de3d4e2b928e7dde3ec5d293&country=br")
+                    .url(urlString)
                     .get()
                     .build();
 
@@ -196,26 +198,17 @@ public class MainActivity extends AppCompatActivity {
                 Response response = client.newCall(request).execute();
                 //Log.d("WebView", response.body().string());
                 JSONObject resp_JSON = new JSONObject(response.body().string());
-                runJavaScript("setNewsJSON(" + resp_JSON + ")");
+                runJavaScript( callback + "(" + resp_JSON + ")");
             } catch (IOException e) {
                 Log.e("NewsTask", "Error fetching news", e);
             }
 
+        }
 
-//            // Formata os dados recebidos em uma string
-//            while((line = input.readLine()) != null)
-//                source.append(line);
-//            input.close();
-//
-//            // Transforma a string em um objeto JSON
-//            JSONObject respJSON = new JSONObject(source.toString());
-//
-//            //Using the JSON simple library parse the string into a json object
-//            JSONObject resp_JSON = new JSONObject(source.toString());
-
-            //
-
-
+        @JavascriptInterface
+        public void getInitialData() {
+            runJavaScript("setListaURL("+new JSONArray(listaURL)+");");
+            runJavaScript("setTime("+ tempoAlteracao +");");
         }
     }
 

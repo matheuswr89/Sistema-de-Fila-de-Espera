@@ -17,9 +17,9 @@ function setListaURL(list){
     listaURL = list;
     urlMonetary = listaURL[0];
     if (listaURL[1] !== urlNews){
-        //urlNews = listaURL[1];
-        urlNews="https://newsapi.org/v2/top-headlines?apiKey=3a0ed5b2de3d4e2b928e7dde3ec5d293&category=general&country=br&pageSize=4";
-        Android.getNews(urlNews);
+        urlNews = listaURL[1];
+        //urlNews="https://newsapi.org/v2/top-headlines?apiKey=3a0ed5b2de3d4e2b928e7dde3ec5d293&category=general&country=br&pageSize=4";
+        Android.getRequest(urlNews, "setNewsJSON");
     }
     urlWeather = listaURL[2];
 }
@@ -35,74 +35,63 @@ function setListaSenhas(list){
               }
               senhasJSON.push(senhaItem);
      }
-     enviaSenhaAilton(senhasJSON);
+     uiUpdateQueueCalls(senhasJSON);
 }
 
 function setNewsJSON(data){
      dataNews = data.articles;
-     //console.log(dataNews);
+     if (dataNews > 0){
+        updateNews(dataNews);
+     }
 }
 
-async function getApiData(url) {
-    const response = await fetch(url);
-    let data = response.json();
-    return data;
-}
+//async function getApiData(url) {
+//    const response = await fetch(url);
+//    let data = response.json();
+//    return data;
+//}
 
 function getData(){
     let data;
 
-    data = getApiData(urlMonetary);
-    data.then(function (response){
-        console.log("pegou dado de finança");
-        res = JSON.stringify(response);
-        enviaFinancaAilton(res);
-    });
+    if (!urlMonetary || !urlWeather || !urlNews || !time) {
+        Android.getInitialData();
+        setTimeout(getData, 1000);
+    } else {
+        Android.getRequest(urlMonetary, "uiUpdateMonetary");
+        Android.getRequest(urlWeather, "uiUpdateWeather");
 
-    data = getApiData(urlWeather);
-    data.then(function (response){
-        console.log("pegou dado de tempo");
-        res = JSON.stringify(response);
-        enviaWeatherAilton(res);
-    });
+        updateNews(dataNews);
 
-    enviaNewsAilton(dataNews);
-
-    setTimeout(getData, 10000);
+        setTimeout(getData, time * 1000);
+    }
 
 }
 
-function enviaWeatherAilton(dado){
-    console.log("enviou dado de tempo")
-    console.log(dado);
-}
+function updateNews(dado){
 
-function enviaFinancaAilton(dado){
-    console.log("enviou dado de financa")
-    console.log(dado);
-}
-
-function enviaSenhaAilton(dado){
-    console.log("enviou senhas");
-    console.log(JSON.stringify(dado));
-}
-
-function enviaNewsAilton(dado){
-
-    if(dado){
+    if(dado && dado.length > 0){
         if(dado.length > 0){
             console.log("enviou noticia");
             console.log(JSON.stringify(dado[0]));
+            uiUpdateNews(dado[0])
             dado.shift();
-        }
-        else{
-            console.log("a");
-            Android.getNews(urlNews);
         }
     }
     else{
-        console.log("else")
+        Android.getRequest(urlNews, "setNewsJSON");
     }
 }
-getData();
+
+function updateMonetary(data) {
+    uiUpdateMonetary(JSON.parse(data));
+}
+
+function updateWeather(data) {
+    uiUpdateWeather(JSON.parse(data));
+}
+
+$(document).ready(function () {
+    getData();
+});
 
